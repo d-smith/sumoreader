@@ -5,6 +5,7 @@ import (
 	"log"
 	"github.com/d-smith/sumoreader"
 	"fmt"
+	"strings"
 )
 
 func main() {
@@ -17,11 +18,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-
 	var count = 1
 	for sr.Scan() {
 		fmt.Printf("===> line %d\n", count)
-		fmt.Println(sr.Text())
+		line := sr.Text()
+		if strings.Contains(line, "{") {
+			fmt.Println(sr.Text())
+		}
 		count++
 	}
 

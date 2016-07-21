@@ -5,7 +5,6 @@ import (
 	"bufio"
 	"strings"
 	"bytes"
-	"fmt"
 )
 
 type SumoReader struct {
@@ -38,7 +37,6 @@ func (sr *SumoReader) Close() {
 
 func (sr *SumoReader) Scan() bool {
 
-	fmt.Println("scan")
 	var buffer bytes.Buffer
 	defer func() {sr.text = buffer.String()}()
 
@@ -60,9 +58,7 @@ func (sr *SumoReader) Scan() bool {
 			return false
 		}
 
-		fmt.Println("processing more")
 		line := sr.scanner.Text()
-		fmt.Println("full record?")
 		buffer.WriteString(line)
 		if recordDone(line) {
 			scanDone = true
