@@ -4,6 +4,7 @@ import (
 	"os"
 	"log"
 	"github.com/d-smith/sumoreader"
+	"github.com/d-smith/sumoreader/apitimings"
 	"fmt"
 	"strings"
 )
@@ -20,10 +21,10 @@ func main() {
 
 	var count = 1
 	for sr.Scan() {
-		fmt.Printf("===> line %d\n", count)
 		line := sr.Text()
 		if strings.Contains(line, "{") {
 			fmt.Println(sr.Text())
+			apitimings.NewAPITimingRec(line)
 		}
 		count++
 	}
