@@ -2,8 +2,9 @@ package apitimings
 
 import (
 	"strings"
-	"fmt"
 	"strconv"
+	"encoding/json"
+	"fmt"
 )
 
 type APITimingRec struct {
@@ -16,14 +17,8 @@ type APITimingRec struct {
 
 func NewAPITimingRec(raw string) (*APITimingRec,error) {
 	parts :=strings.Split(raw,",")
-	fmt.Println("\tThis many parts:",len(parts))
-	fmt.Println("\tMessage id:",parts[0])
-	fmt.Println("\tSource name:",parts[1])
-	fmt.Println("\tSource host:",parts[2])
-	fmt.Println("\tSource category", parts[3])
-	fmt.Println("\tMsg", extractMessage(raw))
 
-	id,err := strconv.Atoi(parts[0])
+	id,err := strconv.Atoi(strings.Replace(parts[0], "\"", "", -1))
 	if err != nil {
 		return nil,err
 	}
@@ -33,7 +28,7 @@ func NewAPITimingRec(raw string) (*APITimingRec,error) {
 		SourceName: parts[1],
 		SourceHost: parts[2],
 		SourceCategory:parts[3],
-
+		Message:extractMessage(raw),
 	},nil
 }
 
@@ -45,4 +40,23 @@ func extractMessage(raw string) string {
 	m = strings.Replace(m,"\n","",-1)
 	m = strings.Replace(m,"\"\"","\"",-1)
 	return m
+}
+
+
+func (at *APITimingRec) CallRecord() (string,error) {
+	var callRecord endToEndTimer
+
+	err := json.Unmarshal([]byte(at.Message), &callRecord)
+	if err != nil {
+		return "",err
+	}
+
+	return fmt.Sprintf("%d|%s|%s|%s|%s|%s|%d",
+		at.MsgId,
+		at.SourceName,
+		at.SourceHost,
+		at.SourceCategory,
+		callRecord.Name,
+		callRecord.Tags,
+		callRecord.Duration.Nanoseconds()),nil
 }

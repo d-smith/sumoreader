@@ -23,8 +23,14 @@ func main() {
 	for sr.Scan() {
 		line := sr.Text()
 		if strings.Contains(line, "{") {
-			fmt.Println(sr.Text())
-			apitimings.NewAPITimingRec(line)
+			//fmt.Println(sr.Text())
+			at,err := apitimings.NewAPITimingRec(line)
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			cr,_ := at.CallRecord()
+			fmt.Println(cr)
 		}
 		count++
 	}
