@@ -36,4 +36,3 @@ type endToEndTimer struct {
 	errorReported    bool
 	start            time.Time
 }
-

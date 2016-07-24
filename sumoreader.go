@@ -1,34 +1,33 @@
 package sumoreader
 
 import (
-	"os"
 	"bufio"
-	"strings"
 	"bytes"
+	"os"
+	"strings"
 )
 
 type SumoReader struct {
-	file *os.File
-	scanner *bufio.Scanner
-	text string
+	file         *os.File
+	scanner      *bufio.Scanner
+	text         string
 	linesScanned int
 }
 
 func NewSumoReader(path string) (*SumoReader, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	scanner := bufio.NewScanner(file)
 	//Skip first line (headers)
 	scanner.Scan()
 
-
-	return &SumoReader{file:file,
-		scanner: scanner,
-		linesScanned:1,
-	},nil
+	return &SumoReader{file: file,
+		scanner:      scanner,
+		linesScanned: 1,
+	}, nil
 }
 
 func (sr *SumoReader) Close() {
@@ -38,7 +37,7 @@ func (sr *SumoReader) Close() {
 func (sr *SumoReader) Scan() bool {
 
 	var buffer bytes.Buffer
-	defer func() {sr.text = buffer.String()}()
+	defer func() { sr.text = buffer.String() }()
 
 	sr.linesScanned++
 	if !sr.scanner.Scan() {
@@ -83,14 +82,12 @@ func isFullRecord(line string) bool {
 		return false
 	}
 
-
-	return strings.LastIndex(parts[len(parts) -1],"\"") == len(parts[len(parts) -1]) -1
+	return strings.LastIndex(parts[len(parts)-1], "\"") == len(parts[len(parts)-1])-1
 }
 
 func recordDone(line string) bool {
-	return strings.LastIndex(line,"\"") == len(line) -1
+	return strings.LastIndex(line, "\"") == len(line)-1
 }
-
 
 func (sr *SumoReader) Lines() int {
 	return sr.linesScanned

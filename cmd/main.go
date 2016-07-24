@@ -1,11 +1,11 @@
 package main
 
 import (
-	"os"
-	"log"
+	"fmt"
 	"github.com/d-smith/sumoreader"
 	"github.com/d-smith/sumoreader/apitimings"
-	"fmt"
+	"log"
+	"os"
 	"strings"
 )
 
@@ -24,12 +24,12 @@ func main() {
 		line := sr.Text()
 		if strings.Contains(line, "{") {
 			//fmt.Println(sr.Text())
-			at,err := apitimings.NewAPITimingRec(line)
+			at, err := apitimings.NewAPITimingRec(line)
 			if err != nil {
 				fmt.Println(err.Error())
 				continue
 			}
-			cr,_ := at.CallRecord()
+			cr, _ := at.CallRecord()
 			fmt.Println(cr)
 		}
 		count++
