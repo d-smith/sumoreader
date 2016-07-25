@@ -57,12 +57,41 @@ func (at *APITimingRec) CallRecord() (string, error) {
 	sub := callRecord.Tags["sub"]
 	aud := callRecord.Tags["aud"]
 
-	return fmt.Sprintf("%s|%s|%s|%s|%s|%s|%d",
+	return fmt.Sprintf("%s|%t|%s|%s|%s|%s|%s|%d",
 		callRecord.TxnId,
+		callRecord.Error != "",
 		unquote(at.SourceHost),
 		unquote(at.SourceCategory),
 		callRecord.Name,
 		sub,
 		aud,
-		callRecord.Duration.Nanoseconds()), nil
+		callRecord.Duration.Nanoseconds()/100000), nil
+}
+
+func (at *APITimingRec) ServiceCalls() ([]string, error) {
+	var callRecord endToEndTimer
+	var serviceCalls []string
+
+	err := json.Unmarshal([]byte(at.Message), &callRecord)
+	if err != nil {
+		return serviceCalls, err
+	}
+
+	for _, c := range callRecord.Contributors {
+		if len(c.ServiceCalls) > 0 {
+			for _, sc := range c.ServiceCalls {
+				sctxt := fmt.Sprintf("%s|%t|%s|%s|%d",
+					callRecord.TxnId,
+					sc.Error != "",
+					sc.Name,
+					sc.Endpoint,
+					sc.Duration/100000,
+				)
+
+				serviceCalls = append(serviceCalls,sctxt)
+			}
+		}
+	}
+
+	return serviceCalls,nil
 }

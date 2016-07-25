@@ -31,6 +31,16 @@ func main() {
 			}
 			cr, _ := at.CallRecord()
 			fmt.Println(cr)
+			calls, err := at.ServiceCalls()
+
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+
+			for _,c := range calls {
+				fmt.Println(c)
+			}
 		}
 		count++
 	}
