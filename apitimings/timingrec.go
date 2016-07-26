@@ -88,10 +88,10 @@ func (at *APITimingRec) ServiceCalls() ([]string, error) {
 					sc.Duration/100000,
 				)
 
-				serviceCalls = append(serviceCalls,sctxt)
+				serviceCalls = append(serviceCalls, sctxt)
 			}
 		}
 	}
 
-	return serviceCalls,nil
+	return serviceCalls, nil
 }

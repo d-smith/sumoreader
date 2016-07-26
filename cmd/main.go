@@ -38,7 +38,7 @@ func main() {
 				continue
 			}
 
-			for _,c := range calls {
+			for _, c := range calls {
 				fmt.Println(c)
 			}
 		}
