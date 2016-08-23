@@ -3,8 +3,8 @@ package sumoreader
 import (
 	"bufio"
 	"bytes"
-	"strings"
 	"io"
+	"strings"
 )
 
 type SumoReader struct {
@@ -15,7 +15,6 @@ type SumoReader struct {
 
 func NewSumoReader(reader io.Reader) (*SumoReader, error) {
 
-
 	scanner := bufio.NewScanner(reader)
 	//Skip first line (headers)
 	scanner.Scan()
@@ -25,7 +24,6 @@ func NewSumoReader(reader io.Reader) (*SumoReader, error) {
 		linesScanned: 1,
 	}, nil
 }
-
 
 func (sr *SumoReader) Scan() bool {
 

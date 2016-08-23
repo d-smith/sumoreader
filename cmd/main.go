@@ -19,8 +19,6 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-
-
 	sr, err := sumoreader.NewSumoReader(file)
 	if err != nil {
 		log.Fatal(err)

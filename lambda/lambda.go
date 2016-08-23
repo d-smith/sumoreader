@@ -3,16 +3,16 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/bitly/go-simplejson"
+	"github.com/d-smith/sumoreader"
+	"github.com/d-smith/sumoreader/apitimings"
+	"io"
 	"log"
 	"os"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/aws"
-	"io"
-	"github.com/d-smith/sumoreader"
 	"strings"
-	"github.com/d-smith/sumoreader/apitimings"
 )
 
 func processBody(body io.Reader) error {
@@ -31,7 +31,7 @@ func processBody(body io.Reader) error {
 				continue
 			}
 			cr, _ := at.CallRecord()
-			fmt.Println(cr)
+			fmt.Printf("call record:\n%s\n", cr)
 			calls, err := at.ServiceCalls()
 
 			if err != nil {
@@ -40,7 +40,7 @@ func processBody(body io.Reader) error {
 			}
 
 			for _, c := range calls {
-				fmt.Println(c)
+				fmt.Printf("service call:\n%s\n", c)
 			}
 		}
 	}
@@ -67,14 +67,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sess, err := session. NewSession()
+	sess, err := session.NewSession()
 	if err != nil {
 		fmt.Println("failed to create session,", err)
 		return
 	}
 
 	svc := s3.New(sess)
-
 
 	for i := 0; i < len(arr); i++ {
 		s3Rec := records.GetIndex(i).Get("s3")
@@ -87,8 +86,8 @@ func main() {
 		fmt.Printf("process %s in bucket %s (%s)\n", key.MustString(), bucketName.MustString(), arn.MustString())
 
 		params := &s3.GetObjectInput{
-			Bucket:                     aws.String(bucketName.MustString()),
-			Key:                        aws.String(key.MustString()),
+			Bucket: aws.String(bucketName.MustString()),
+			Key:    aws.String(key.MustString()),
 		}
 
 		resp, err := svc.GetObject(params)
