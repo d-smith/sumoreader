@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 	"strings"
+	"compress/gzip"
+	"io"
 )
 
 func main() {
@@ -18,8 +20,21 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	defer file.Close()
 
-	sr, err := sumoreader.NewSumoReader(file)
+	var reader io.Reader = file
+
+	gzipReader, err := gzip.NewReader(file)
+	if err == nil {
+		fmt.Println("assuming gzip encoding")
+		reader = gzipReader
+		defer gzipReader.Close()
+	} else {
+		fmt.Println("Error creating gzip reader... read as uncompressed", err.Error())
+	}
+
+
+	sr, err := sumoreader.NewSumoReader(reader)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,17 +44,23 @@ func main() {
 		line := sr.Text()
 		if strings.Contains(line, "{") {
 			//fmt.Println(sr.Text())
+			//fmt.Println("...create api timings record")
 			at, err := apitimings.NewAPITimingRec(line)
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println("not a timing record", err.Error())
 				continue
 			}
-			cr, _ := at.CallRecord()
+			//fmt.Println("create call record")
+			cr, err := at.CallRecord()
+			if err != nil {
+				//fmt.Println("Not a call record", err.Error())
+				continue
+			}
 			fmt.Println(cr)
 			calls, err := at.ServiceCalls()
 
 			if err != nil {
-				fmt.Println(err.Error())
+				//fmt.Println(err.Error())
 				continue
 			}
 

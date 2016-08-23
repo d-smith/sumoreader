@@ -14,6 +14,7 @@ import (
 	"os"
 	"strings"
 	"github.com/aws/aws-sdk-go/service/firehose"
+	"compress/gzip"
 )
 
 func putRecord(firehoseSvc *firehose.Firehose, streamName, record string) {
@@ -40,7 +41,19 @@ func processSvcCallRecord(firehoseSvc *firehose.Firehose, svcCall string) {
 }
 
 func processBody(fireHoseSvc *firehose.Firehose, body io.Reader) error {
-	sr, err := sumoreader.NewSumoReader(body)
+
+	var reader io.Reader = body
+
+	gzipReader, err := gzip.NewReader(body)
+	if err == nil {
+		fmt.Println("assuming gzip encoding")
+		reader = gzipReader
+		defer gzipReader.Close()
+	} else {
+		fmt.Println("Error creating gzip reader... read as uncompressed", err.Error())
+	}
+
+	sr, err := sumoreader.NewSumoReader(reader)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,16 +64,21 @@ func processBody(fireHoseSvc *firehose.Firehose, body io.Reader) error {
 			//fmt.Println(sr.Text())
 			at, err := apitimings.NewAPITimingRec(line)
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println("Not a timing record... skipping")
 				continue
 			}
-			cr, _ := at.CallRecord()
+			cr, err := at.CallRecord()
+			if err != nil {
+				fmt.Println("Not a call record... skipping")
+				continue
+			}
+
 			fmt.Printf("call record:\n%s\n", cr)
 			processCallRecord(fireHoseSvc, cr)
-			calls, err := at.ServiceCalls()
 
+			calls, err := at.ServiceCalls()
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println("No service call records... skipping")
 				continue
 			}
 

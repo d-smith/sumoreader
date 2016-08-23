@@ -1,6 +1,6 @@
 var child_process = require('child_process');
 
-console.log("yeah")
+console.log("Node wrapper for golang lambda function activated")
 
 exports.handler = function(event, context) {
 
