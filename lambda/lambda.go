@@ -8,9 +8,49 @@ import (
 	"os"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"io/ioutil"
 	"github.com/aws/aws-sdk-go/aws"
+	"io"
+	"github.com/d-smith/sumoreader"
+	"strings"
+	"github.com/d-smith/sumoreader/apitimings"
 )
+
+func processBody(body io.Reader) error {
+	sr, err := sumoreader.NewSumoReader(body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for sr.Scan() {
+		line := sr.Text()
+		if strings.Contains(line, "{") {
+			//fmt.Println(sr.Text())
+			at, err := apitimings.NewAPITimingRec(line)
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			cr, _ := at.CallRecord()
+			fmt.Println(cr)
+			calls, err := at.ServiceCalls()
+
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+
+			for _, c := range calls {
+				fmt.Println(c)
+			}
+		}
+	}
+
+	if err := sr.Err(); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func main() {
 	fmt.Printf("Go binary called with args %v\n", os.Args)
@@ -63,9 +103,8 @@ func main() {
 		}
 
 		defer resp.Body.Close()
-		bytes, err := ioutil.ReadAll(resp.Body)
 
-		fmt.Printf("Read this:\n%s\n", string(bytes))
+		processBody(resp.Body)
 
 	}
 
