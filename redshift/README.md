@@ -1,6 +1,6 @@
 Create a bastion host - ubuntu 14.4
 
-Install psql
+Install psql - probably have to do sudo apt-get update first.
 
 <pre>
 sudo apt-get install postgresql-client
@@ -35,6 +35,8 @@ VPC and use a public address for cluster.
 * 52.70.63.192/27 for US East (N. Virginia)
 * 52.89.255.224/27 for US West (Oregon)
 * 52.19.239.192/27 for EU (Ireland)
+
+Security group needs ingress on 5439
 
 <pre>
 create table svccall (
