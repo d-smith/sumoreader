@@ -14,7 +14,14 @@ func main() {
 		log.Fatal("usage: " + os.Args[0] + " <file path>")
 	}
 
-	sr, err := sumoreader.NewSumoReader(os.Args[1])
+	file, err := os.Open(os.Args[1])
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+
+
+	sr, err := sumoreader.NewSumoReader(file)
 	if err != nil {
 		log.Fatal(err)
 	}
