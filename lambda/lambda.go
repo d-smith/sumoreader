@@ -13,9 +13,33 @@ import (
 	"log"
 	"os"
 	"strings"
+	"github.com/aws/aws-sdk-go/service/firehose"
 )
 
-func processBody(body io.Reader) error {
+func putRecord(firehoseSvc *firehose.Firehose, streamName, record string) {
+	params := &firehose.PutRecordInput{
+		DeliveryStreamName: aws.String(streamName),
+		Record: &firehose.Record{
+			Data: []byte(record + "\n"),
+		},
+	}
+
+	_, err := firehoseSvc.PutRecord(params)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+}
+
+func processCallRecord(firehoseSvc *firehose.Firehose, callRecord string) {
+	putRecord(firehoseSvc, "call-record-stream", callRecord)
+}
+
+func processSvcCallRecord(firehoseSvc *firehose.Firehose, svcCall string) {
+	putRecord(firehoseSvc, "scv-call-stream", svcCall)
+}
+
+func processBody(fireHoseSvc *firehose.Firehose, body io.Reader) error {
 	sr, err := sumoreader.NewSumoReader(body)
 	if err != nil {
 		log.Fatal(err)
@@ -32,6 +56,7 @@ func processBody(body io.Reader) error {
 			}
 			cr, _ := at.CallRecord()
 			fmt.Printf("call record:\n%s\n", cr)
+			processCallRecord(fireHoseSvc, cr)
 			calls, err := at.ServiceCalls()
 
 			if err != nil {
@@ -41,6 +66,7 @@ func processBody(body io.Reader) error {
 
 			for _, c := range calls {
 				fmt.Printf("service call:\n%s\n", c)
+				processSvcCallRecord(fireHoseSvc,c)
 			}
 		}
 	}
@@ -73,7 +99,8 @@ func main() {
 		return
 	}
 
-	svc := s3.New(sess)
+	s3svc := s3.New(sess)
+	fireHoseSvc := firehose.New(sess)
 
 	for i := 0; i < len(arr); i++ {
 		s3Rec := records.GetIndex(i).Get("s3")
@@ -90,7 +117,7 @@ func main() {
 			Key:    aws.String(key.MustString()),
 		}
 
-		resp, err := svc.GetObject(params)
+		resp, err := s3svc.GetObject(params)
 		if err != nil {
 			fmt.Printf("Error on GetObject: %s\n", err.Error())
 			continue
@@ -103,7 +130,10 @@ func main() {
 
 		defer resp.Body.Close()
 
-		processBody(resp.Body)
+		err = processBody(fireHoseSvc, resp.Body)
+		if err != nil {
+			fmt.Printf("Error processing body: %s\n", err.Error())
+		}
 
 	}
 

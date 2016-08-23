@@ -28,3 +28,20 @@ create table callrecord (
 </pre>
 
 Column list for firehose: `txnid,error,host,category,name,sub,aud,duration`
+
+Note on the setup, you need to enable Firehose Ingress to the Redshift
+VPC and use a public address for cluster.
+
+* 52.70.63.192/27 for US East (N. Virginia)
+* 52.89.255.224/27 for US West (Oregon)
+* 52.19.239.192/27 for EU (Ireland)
+
+<pre>
+create table svccall (
+    txnid varchar(100) constraint svccall_pk primary key,
+    error bool not null,
+    name varchar(100) not null,
+    endpoint varchar(100) not null,
+    duration integer not null
+)
+</pre>
