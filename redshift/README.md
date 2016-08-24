@@ -1,8 +1,8 @@
 Create a bastion host - ubuntu 14.4
 
-Install psql - probably have to do sudo apt-get update first.
 
 <pre>
+sudo apt-get update
 sudo apt-get install postgresql-client
 </pre>
 
