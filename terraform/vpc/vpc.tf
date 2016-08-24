@@ -157,3 +157,15 @@ resource "aws_route_table_association" "us-east-1a-private" {
     subnet_id = "${aws_subnet.us-east-1a-private.id}"
     route_table_id = "${aws_route_table.us-east-1a-private.id}"
 }
+
+output "vpc_id" {
+    value = "${aws_vpc.default.id}"
+}
+
+output "private_subnet" {
+    value = "${aws_subnet.us-east-1a-private.id}"
+}
+
+output "public_subnet" {
+    value = "${aws_subnet.us-east-1a-public.id}"
+}
