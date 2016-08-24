@@ -74,6 +74,34 @@ resource "aws_security_group" "nat" {
     }
 }
 
+resource "aws_security_group" "api-redshift-security-group" {
+    name = "api-redshift-sg"
+    description = "security group for api redshift cluster"
+
+    # Firehose Ingress
+    ingress {
+        from_port = 5439
+        to_port = 5439
+        protocol = "tcp"
+        cidr_blocks = ["52.70.63.192/27"]
+    }
+
+    # Ingress from public VPC
+    ingress {
+            from_port = 5439
+            to_port = 5439
+            protocol = "tcp"
+            cidr_blocks = ["10.0.0.0/24"]
+    }
+
+    vpc_id = "${aws_vpc.default.id}"
+
+    tags {
+        Name = "api redshift security group"
+    }
+}
+
+
 resource "aws_instance" "nat" {
     ami = "ami-c02b04a8" # this is a special ami preconfigured to do NAT
     availability_zone = "us-east-1a"
@@ -168,4 +196,8 @@ output "private_subnet" {
 
 output "public_subnet" {
     value = "${aws_subnet.us-east-1a-public.id}"
+}
+
+output "rs_security_group" {
+    value = "${aws_security_group.api-redshift-security-group.id}"
 }
