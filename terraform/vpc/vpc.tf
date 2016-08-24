@@ -39,6 +39,25 @@ resource "aws_security_group" "api-redshift-security-group" {
     }
 }
 
+resource "aws_security_group" "api-redshift-dbmaint-security-group" {
+    name = "api-redshift-dbmaint-sg"
+    description = "security group for api redshift cluster db maint"
+
+    ingress {
+            from_port = 22
+            to_port = 22
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    vpc_id = "${aws_vpc.default.id}"
+
+    tags {
+        Name = "api redshift dm maint security group"
+    }
+}
+
+
 
 
 /*
