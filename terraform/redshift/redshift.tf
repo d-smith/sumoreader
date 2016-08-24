@@ -25,3 +25,7 @@ output "rs_subnet_group" {
     value = "${aws_redshift_subnet_group.api-subnet-group.id}"
 }
 
+output "rs_endpoint" {
+   value = "${aws_redshift_cluster.api-cluster.endpoint}"
+}
+
