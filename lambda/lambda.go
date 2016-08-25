@@ -37,7 +37,7 @@ func processCallRecord(firehoseSvc *firehose.Firehose, callRecord string) {
 }
 
 func processSvcCallRecord(firehoseSvc *firehose.Firehose, svcCall string) {
-	putRecord(firehoseSvc, "scv-call-stream", svcCall)
+	putRecord(firehoseSvc, "svc-call-stream", svcCall)
 }
 
 func processBody(fireHoseSvc *firehose.Firehose, body io.Reader) error {
