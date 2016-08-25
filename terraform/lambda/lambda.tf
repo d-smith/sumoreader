@@ -85,3 +85,11 @@ resource "aws_iam_role_policy" "api_parser_lambda_policy" {
 EOF
 }
 
+resource "aws_lambda_function" "test_lambda" {
+  filename = "../../lambda/lambda.zip"
+  function_name = "apiLogParserFn"
+  role = "${aws_iam_role.api_lambda_role.arn}"
+  handler = "index.handler"
+  runtime = "nodejs4.3"
+}
+
