@@ -81,3 +81,25 @@ resource "aws_kinesis_firehose_delivery_stream" "call_record_stream" {
     data_table_name = "callrecord"
   }
 }
+
+resource "aws_kinesis_firehose_delivery_stream" "svc_call_stream" {
+
+  name = "svc-call-stream"
+  destination = "redshift"
+
+  s3_configuration {
+    role_arn = "${aws_iam_role.firehose_api_role.arn}"
+    prefix = "sc/"
+    bucket_arn = "${aws_s3_bucket.bucket.arn}"
+    buffer_size = 10
+    buffer_interval = 60
+  }
+  redshift_configuration {
+    role_arn = "${aws_iam_role.firehose_api_role.arn}"
+    cluster_jdbcurl = "jdbc:redshift://${var.redshift_endpoint}/apidb"
+    username = "apimaster"
+    password = "${var.master_pw}"
+    data_table_name = "svccall"
+  }
+}
+
