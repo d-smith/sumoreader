@@ -3,7 +3,7 @@ Create a bastion host - ubuntu 14.4
 
 <pre>
 sudo apt-get update
-sudo apt-get install postgresql-client
+sudo apt-get -y install postgresql-client
 </pre>
 
 Connect to redshift
@@ -16,6 +16,7 @@ Tables:
 
 <pre>
 create table callrecord (
+    logtime timestamp not null,
     txnid varchar(100) constraint firstkey primary key,
     error bool not null,
     host varchar(100) not null,
@@ -40,6 +41,7 @@ Security group needs ingress on 5439
 
 <pre>
 create table svccall (
+    logtime timestamp not null,
     txnid varchar(100) constraint svccall_pk primary key,
     error bool not null,
     name varchar(100) not null,

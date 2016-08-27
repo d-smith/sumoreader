@@ -19,17 +19,18 @@ func main() {
 	/*params := &firehose.PutRecordInput{
 		DeliveryStreamName: aws.String("call-record-stream"),
 		Record: &firehose.Record{
-			Data: []byte("181c575a-ef8c-4468-76e3-3c95ff3a5e4b|false|vc2coma2078845n|/xapi/DEV/NONPROD|xtracApi-GET-work-items-communications|XWHRon|a79fcb28-2621-4973-8a1e-c09a2ab30f79|262\n"),
+			Data: []byte("2016-07-01 15:22:58|56bfe3d5-5204-ec24-077d-6a8213fdf8a5|false|vc2coma2078845n|/xapi/DEV/NONPROD|xtracApi-POST-workItems-search|XWHRon|a79fcb28-2621-4973-8a1e-c09a2ab30f79|1431\n"),
 		},
 	}*/
 
 	params := &firehose.PutRecordInput{
 		DeliveryStreamName: aws.String("svc-call-stream"),
 		Record: &firehose.Record{
-			Data: []byte("181c575a-ef8c-4468-76e3-3c95ff3a5e4b|false|Core-Correspondence-RetrieveCorrList|vc2coma2078845n.fmr.com:11000|15\n"),
+			Data: []byte("2016-09-09 15:09:09|xxx181c575a-ef8c-4468-76e3-3c95ff3a5e4b|false|Core-Correspondence-RetrieveCorrList|vc2coma2078845n.fmr.com:11000|15\n"),
 		},
 	}
 
+	fmt.Printf("Sending %s\n", string(params.Record.Data))
 	resp, err := svc.PutRecord(params)
 
 	if err != nil {

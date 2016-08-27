@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type APITimingRec struct {
@@ -46,6 +47,12 @@ func unquote(s string) string {
 	return s[1 : len(s)-1]
 }
 
+func formatPGTime(t time.Time) string {
+	return fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d",
+		t.Year(), t.Month(), t.Day(),
+		t.Hour(), t.Minute(), t.Second())
+}
+
 func (at *APITimingRec) CallRecord() (string, error) {
 	var callRecord endToEndTimer
 
@@ -57,7 +64,8 @@ func (at *APITimingRec) CallRecord() (string, error) {
 	sub := callRecord.Tags["sub"]
 	aud := callRecord.Tags["aud"]
 
-	return fmt.Sprintf("%s|%t|%s|%s|%s|%s|%s|%d",
+	return fmt.Sprintf("%s|%s|%t|%s|%s|%s|%s|%s|%d",
+		formatPGTime(callRecord.LoggingTimestamp),
 		callRecord.TxnId,
 		callRecord.Error != "",
 		unquote(at.SourceHost),
@@ -80,7 +88,8 @@ func (at *APITimingRec) ServiceCalls() ([]string, error) {
 	for _, c := range callRecord.Contributors {
 		if len(c.ServiceCalls) > 0 {
 			for _, sc := range c.ServiceCalls {
-				sctxt := fmt.Sprintf("%s|%t|%s|%s|%d",
+				sctxt := fmt.Sprintf("%s|%s|%t|%s|%s|%d",
+					formatPGTime(callRecord.LoggingTimestamp),
 					callRecord.TxnId,
 					sc.Error != "",
 					sc.Name,
