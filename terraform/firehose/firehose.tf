@@ -70,8 +70,7 @@ resource "aws_iam_role_policy" "firehose_api_policy" {
         "logs:PutLogEvents"
       ],
       "Resource": [
-        "arn:aws:logs:us-east-1:930295567417:log-group:/aws/kinesisfirehose/call-record-stream:log-stream:*",
-        "arn:aws:logs:us-east-1:930295567417:log-group:/aws/kinesisfirehose/svc-call-stream:log-stream:*"
+        "arn:aws:logs:*:*:*"
       ]
     }
   ]
