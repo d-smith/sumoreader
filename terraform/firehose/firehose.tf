@@ -1,20 +1,3 @@
-resource "aws_cloudwatch_log_group" "crs" {
-  name = "/aws/kinesisfirehose/call-record-stream"
-
-  provisioner "local-exec" {
-    command = "aws logs create-log-stream --log-group-name /aws/kinesisfirehose/call-record-stream --log-stream-name RedshiftDelivery"
-  }
-
-  provisioner "local-exec" {
-    command = "aws logs create-log-stream --log-group-name /aws/kinesisfirehose/call-record-stream --log-stream-name S3Delivery"
-  }
-}
-
-resource "aws_cloudwatch_log_group" "scs" {
-  name = "/aws/kinesisfirehose/svc-call-stream"
-}
-
-
 resource "aws_s3_bucket" "bucket" {
   bucket = "xtds-tf-bucket"
   acl = "private"
