@@ -1,3 +1,13 @@
+resource "aws_cloudwatch_log_group" "crs" {
+  name = "/aws/kinesisfirehose/call-record-stream"
+}
+
+resource "aws_cloudwatch_log_group" "scs" {
+  name = "/aws/kinesisfirehose/svc-call-stream"
+}
+
+
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "xtds-tf-bucket"
   acl = "private"
