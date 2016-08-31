@@ -15,7 +15,7 @@ resource "aws_instance" "web" {
     ami = "${data.aws_ami.ubuntu.id}"
     instance_type = "t1.micro"
     tags {
-        Name = "HelloWorld"
+        Name = "Redshift-Client"
     }
     key_name = "FidoKeyPair"
     vpc_security_group_ids = ["${var.security_group}"]
