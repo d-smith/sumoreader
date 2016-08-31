@@ -104,11 +104,14 @@ output "vpc_id" {
     value = "${aws_vpc.default.id}"
 }
 
-
 output "public_subnet" {
     value = "${aws_subnet.us-east-1a-public.id}"
 }
 
 output "rs_security_group" {
     value = "${aws_security_group.api-redshift-security-group.id}"
+}
+
+output "rs_client_security_group" {
+    value = "${aws_security_group.api-redshift-dbmaint-security-group.id}"
 }
