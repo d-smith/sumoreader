@@ -6,7 +6,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"errors"
 )
+
+var ErrNotTimingRecord = errors.New("Not an API timing record")
 
 type APITimingRec struct {
 	MsgId          int
@@ -59,6 +62,10 @@ func (at *APITimingRec) CallRecord() (string, error) {
 	err := json.Unmarshal([]byte(at.Message), &callRecord)
 	if err != nil {
 		return "", err
+	}
+
+	if callRecord.Name == "" || callRecord.TxnId == "" {
+		return "",ErrNotTimingRecord
 	}
 
 	sub := callRecord.Tags["sub"]

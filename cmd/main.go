@@ -53,7 +53,7 @@ func main() {
 			//fmt.Println("create call record")
 			cr, err := at.CallRecord()
 			if err != nil {
-				//fmt.Println("Not a call record", err.Error())
+				fmt.Println("Not a call record", err.Error())
 				continue
 			}
 			fmt.Println(cr)

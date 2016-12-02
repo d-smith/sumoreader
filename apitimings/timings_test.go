@@ -22,3 +22,15 @@ func TestParseSumoJSON(t *testing.T) {
 		assert.Equal(t, "xtracApi-POST-workItems-search", callRecord.Name)
 	}
 }
+
+const sumoTimingStructNonAPI =
+`"-9223372036261114666","/vc2coma2078845n/log/xtrac-api/api_rest_transformation.log","vc2coma2078845n","/xapi/DEV/NONPROD","1467400978000","1467400988935","117209063","103886658","201","plain:atp:o:6:l:25:p:yyyy-MM-dd'T'HH:mm:ssZZZZ","","UTF8","time=""2016-07-01T15:22:58-04:00"" level=info msg=""request for /xtrac/api/v1/work-items/search with method POST"" {}"`
+
+
+func TestParseNonTimingMessage(t *testing.T) {
+	timingRec, err := NewAPITimingRec(sumoTimingStructNonAPI)
+	assert.Nil(t, err)
+
+	_,err = timingRec.CallRecord()
+	assert.NotNil(t,err)
+}
