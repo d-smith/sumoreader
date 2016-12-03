@@ -1,14 +1,14 @@
 package main
 
 import (
+	"compress/gzip"
 	"fmt"
 	"github.com/d-smith/sumoreader"
 	"github.com/d-smith/sumoreader/apitimings"
+	"io"
 	"log"
 	"os"
 	"strings"
-	"compress/gzip"
-	"io"
 )
 
 func main() {
@@ -32,7 +32,6 @@ func main() {
 	} else {
 		fmt.Println("Error creating gzip reader... read as uncompressed", err.Error())
 	}
-
 
 	sr, err := sumoreader.NewSumoReader(reader)
 	if err != nil {

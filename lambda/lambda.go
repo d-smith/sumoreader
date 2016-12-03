@@ -2,9 +2,11 @@ package main
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/firehose"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/bitly/go-simplejson"
 	"github.com/d-smith/sumoreader"
@@ -13,8 +15,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"github.com/aws/aws-sdk-go/service/firehose"
-	"compress/gzip"
 )
 
 func putRecord(firehoseSvc *firehose.Firehose, streamName, record string) {
@@ -84,7 +84,7 @@ func processBody(fireHoseSvc *firehose.Firehose, body io.Reader) error {
 
 			for _, c := range calls {
 				fmt.Printf("service call:\n%s\n", c)
-				processSvcCallRecord(fireHoseSvc,c)
+				processSvcCallRecord(fireHoseSvc, c)
 			}
 		}
 	}

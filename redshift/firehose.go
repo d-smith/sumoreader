@@ -24,8 +24,6 @@ func main() {
 		},
 	}
 
-
-
 	/*params := &firehose.PutRecordInput{
 		DeliveryStreamName: aws.String("svc-call-stream"),
 		Record: &firehose.Record{

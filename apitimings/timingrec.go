@@ -2,11 +2,11 @@ package apitimings
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 	"time"
-	"errors"
 )
 
 var ErrNotTimingRecord = errors.New("Not an API timing record")
@@ -65,7 +65,7 @@ func (at *APITimingRec) CallRecord() (string, error) {
 	}
 
 	if callRecord.Name == "" || callRecord.TxnId == "" {
-		return "",ErrNotTimingRecord
+		return "", ErrNotTimingRecord
 	}
 
 	sub := callRecord.Tags["sub"]
