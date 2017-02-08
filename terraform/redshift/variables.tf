@@ -4,5 +4,5 @@ variable "vpc_security_group_id" {}
 
 variable "aws_region" {
     description = "EC2 Region for the VPC"
-    default = "us-east-1"
+    default = "us-west-2"
 }

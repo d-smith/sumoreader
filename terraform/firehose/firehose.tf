@@ -9,13 +9,13 @@ resource "aws_cloudwatch_log_group" "scs" {
 
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "xtds-tf-bucket"
+  bucket = "xtds-or-tf-bucket"
   acl = "private"
 }
 
 
 resource "aws_iam_role" "firehose_api_role" {
-   name = "firehose_api_role"
+   name = "or_firehose_api_role"
    assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -52,8 +52,8 @@ resource "aws_iam_role_policy" "firehose_api_policy" {
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:aws:s3:::xtds-tf-bucket",
-        "arn:aws:s3:::xtds-tf-bucket/*"
+        "arn:aws:s3:::xtds-or-tf-bucket",
+        "arn:aws:s3:::xtds-or-tf-bucket/*"
       ]
     },
     {

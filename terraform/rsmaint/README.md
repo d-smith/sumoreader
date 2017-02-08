@@ -2,7 +2,9 @@ This subdirectory contains a terraform script to launch an ec2 instance
 in the redshift subnet with the security group that allows ssh access.
 
 The script requires the security group id and subnet id, you can get these
-by running the getparams script.
+by running the getparams script. Note you may need to set the
+AWS_DEFAULT_REGION environment variable if you want to go against a 
+region that is different from your default.
 
 On occasion the instance id can't be harvested - when that happens you can
 go to the amazon console to get the public ip address or use the aws cli.
@@ -12,7 +14,7 @@ the instance. You can use the aws command line to get the address
 of the cluster:
 
 <pre>
-aws redshift describe-clusters|jq .Clusters[0].Endpoint.Address
+aws redshift describe-clusters --region us-east-1|jq .Clusters[0].Endpoint.Address
 </pre>
 
 Once you log into the instance (which will have psql preinstalled) you

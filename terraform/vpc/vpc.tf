@@ -17,11 +17,15 @@ resource "aws_security_group" "api-redshift-security-group" {
     description = "security group for api redshift cluster"
 
     # Firehose Ingress
+    # East 52.70.63.192/27
+    # Oregon 52.89.255.224/27
+    # Ireland 52.19.239.192/27
+    # See http://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-rs
     ingress {
         from_port = 5439
         to_port = 5439
         protocol = "tcp"
-        cidr_blocks = ["52.70.63.192/27"]
+        cidr_blocks = ["52.89.255.224/27"]
     }
 
     # Ingress from public VPC
@@ -70,18 +74,18 @@ resource "aws_security_group" "api-redshift-dbmaint-security-group" {
 /*
   Public Subnet
 */
-resource "aws_subnet" "us-east-1a-public" {
+resource "aws_subnet" "us-west-2a-public" {
     vpc_id = "${aws_vpc.default.id}"
 
     cidr_block = "${var.public_subnet_cidr}"
-    availability_zone = "us-east-1a"
+    availability_zone = "us-west-2a"
     map_public_ip_on_launch = true
     tags {
         Name = "Public Subnet"
     }
 }
 
-resource "aws_route_table" "us-east-1a-public" {
+resource "aws_route_table" "us-west-2a-public" {
     vpc_id = "${aws_vpc.default.id}"
 
     route {
@@ -94,9 +98,9 @@ resource "aws_route_table" "us-east-1a-public" {
     }
 }
 
-resource "aws_route_table_association" "us-east-1a-public" {
-    subnet_id = "${aws_subnet.us-east-1a-public.id}"
-    route_table_id = "${aws_route_table.us-east-1a-public.id}"
+resource "aws_route_table_association" "us-west-2a-public" {
+    subnet_id = "${aws_subnet.us-west-2a-public.id}"
+    route_table_id = "${aws_route_table.us-west-2a-public.id}"
 }
 
 
@@ -105,7 +109,7 @@ output "vpc_id" {
 }
 
 output "public_subnet" {
-    value = "${aws_subnet.us-east-1a-public.id}"
+    value = "${aws_subnet.us-west-2a-public.id}"
 }
 
 output "rs_security_group" {

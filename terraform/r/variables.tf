@@ -1,8 +1,7 @@
 variable "aws_region" {
     description = "EC2 Region for the VPC"
-    default = "us-west-2"
+    default = "us-east-1"
 }
 
+variable "vpc" {}
 variable "subnet" {}
-variable "security_group" {}
-variable "key_pair" {}

@@ -1,5 +1,5 @@
 resource "aws_iam_role" "api_lambda_role" {
-  name = "api_lambda_role"
+  name = "or_api_lambda_role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -18,7 +18,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "api_s3_exec_lambda_policy" {
-  name = "api_s3_exec_lambda_policy"
+  name = "or_api_s3_exec_lambda_policy"
   role = "${aws_iam_role.api_lambda_role.id}"
   policy = <<EOF
 {
@@ -37,7 +37,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "api_basic_exec_lambda_policy" {
-  name = "api_basic_exec_lambda_policy"
+  name = "or_api_basic_exec_lambda_policy"
   role = "${aws_iam_role.api_lambda_role.id}"
   policy = <<EOF
 {
@@ -64,7 +64,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "api_parser_lambda_policy" {
-  name = "api_parser_lambda_policy"
+  name = "or_api_parser_lambda_policy"
   role = "${aws_iam_role.api_lambda_role.id}"
   policy = <<EOF
 {

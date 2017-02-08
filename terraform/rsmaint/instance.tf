@@ -17,7 +17,7 @@ resource "aws_instance" "web" {
     tags {
         Name = "Redshift-Client"
     }
-    key_name = "FidoKeyPair"
+    key_name = "${var.key_pair}"
     vpc_security_group_ids = ["${var.security_group}"]
     subnet_id = "${var.subnet}"
     user_data = "${file("dbclient_setup.txt")}"
