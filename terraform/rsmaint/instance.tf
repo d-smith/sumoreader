@@ -21,6 +21,7 @@ resource "aws_instance" "web" {
     vpc_security_group_ids = ["${var.security_group}"]
     subnet_id = "${var.subnet}"
     user_data = "${file("dbclient_setup.txt")}"
+    iam_instance_profile = "${var.instance_profile_name}"
 }
 
 output "public_dns" {

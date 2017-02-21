@@ -6,3 +6,4 @@ variable "aws_region" {
 variable "subnet" {}
 variable "security_group" {}
 variable "key_pair" {}
+variable "instance_profile_name" {}

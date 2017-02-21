@@ -3,8 +3,10 @@ in the redshift subnet with the security group that allows ssh access.
 
 The script requires the security group id and subnet id, you can get these
 by running the getparams script. Note you may need to set the
-AWS_DEFAULT_REGION environment variable if you want to go against a 
+AWS\_DEFAULT\_REGION environment variable if you want to go against a 
 region that is different from your default.
+
+You may also need to set http\_proxy and https\_proxy environment variables as well.
 
 On occasion the instance id can't be harvested - when that happens you can
 go to the amazon console to get the public ip address or use the aws cli.
