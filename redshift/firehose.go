@@ -24,12 +24,6 @@ func main() {
 		},
 	}
 
-	/*params := &firehose.PutRecordInput{
-		DeliveryStreamName: aws.String("svc-call-stream"),
-		Record: &firehose.Record{
-			Data: []byte("2016-09-09 15:09:09|xxx181c575a-ef8c-4468-76e3-3c95ff3a5e4b|false|Core-Correspondence-RetrieveCorrList|vc2coma2078845n.fmr.com:11000|15\n"),
-		},
-	}*/
 
 	fmt.Printf("Sending %s\n", string(params.Record.Data))
 	resp, err := svc.PutRecord(params)
